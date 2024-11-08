@@ -13,17 +13,29 @@ ws_next=0
 # An array of booleans indicating which of the currently opened workspaces is focused
 ws_focus=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "focused" | awk -F: '{print $2}'))
 # An array of the numbers associated with the currently opened workspaces
-ws_num=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "num" | awk -F: '{print int($2)}'))
+ws_num_tmp=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "num" | awk -F: '{print int($2)}'))
 
 # The amount of workspaces opened
 nb_ws=${#ws_focus[@]}
 
 # Current workspace
 ws_curr=0
+ws_num=()
 
 # Find the current workspace's number
 for i in $(seq 0 ${nb_ws})
 do
+	# Remove negative workspace numbers; these come from custom-named workspaces and may induce errors later
+	if [[ ${ws_num_tmp[$i]} -gt 0 ]]; then
+		if [[ ${ws_num_tmp[$i]} -lt 10 ]]; then
+			ws_num+=($(printf "%02d" ${ws_num_tmp[$i]}))
+		else
+			ws_num+=(${ws_num_tmp[$i]})
+		fi
+	else
+		# fuck things up
+		ws_num+=(0)
+	fi
 	if [[ ${ws_focus[$i]} == 'true' ]]; then
 		ws_curr=${ws_num[$i]}
 	fi
@@ -56,8 +68,7 @@ if [[ $ws_curr -ne 0 ]]; then
 				# Find a free (non active non focused) workspace on an output
 				for i in $(seq $sta $ste $WS_MAX)
 				do
-					#if [[ ! ${ws_num[*]} =~ $i && $ws -ne $WS_MAX-$sta && $found == false ]]; then
-					if [[ ! ${ws_num[*]} =~ $i && $found == false ]]; then
+					if [[ ! ${ws_num[*]} =~ $(printf "%02d" $i) && $found == false ]]; then
 						ws_next=$i
 						found=true
 					fi
@@ -75,7 +86,7 @@ if [[ $ws_curr -ne 0 ]]; then
 		# Direct & simple loop for workspaces without a pattern
 		for i in $(seq 1 1 $WS_MAX)
 		do
-			if [[ ! ${ws_num[*]} =~ $i && $found == false ]]; then
+			if [[ ! ${ws_num[*]} =~ $(printf "%02d" $i) && $found == false ]]; then
 				ws_next=$i
 				found=true
 			fi
@@ -87,9 +98,9 @@ elif [[ $ws_curr -eq 0 ]]; then
 fi
 
 if [[ $ws_next -gt 0 && $ws_next -le $WS_MAX ]]; then
-	#echo $ws_next
+	echo $ws_next
 	# Switch to the new ws
-	i3-msg workspace number $ws_next
+	#i3-msg workspace number $ws_next
 else
 	echo -e "\nNo workspaces available, please organise your WM\n"
 fi
