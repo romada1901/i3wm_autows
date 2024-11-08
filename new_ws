@@ -98,9 +98,9 @@ elif [[ $ws_curr -eq 0 ]]; then
 fi
 
 if [[ $ws_next -gt 0 && $ws_next -le $WS_MAX ]]; then
-	echo $ws_next
+	#echo $ws_next
 	# Switch to the new ws
-	#i3-msg workspace number $ws_next
+	i3-msg workspace number $ws_next
 else
 	echo -e "\nNo workspaces available, please organise your WM\n"
 fi
