@@ -14,7 +14,7 @@ You might assign your workspaces to a given output. I personally assign the odd 
 This script, with the variable "evenodd" (line 5) can open workspaces depending on that preference, i.e. open ws 5 on output 1 instead of output 2 even if the current focused workspace is on output 2.
 By default, this var is set to false; ws 6 will be opened on output 1 if the script is ran on output 1. Otherwise, please consider:
 ```css
-evenodd=true
+EVEN_ODD=true
 ```
 
 ## To do
