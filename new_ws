@@ -37,7 +37,7 @@ do
 		ws_num+=(0)
 	fi
 	if [[ ${ws_focus[$i]} == 'true' ]]; then
-		ws_curr=${ws_num[$i]}
+		ws_curr=$(printf '%d' "'${ws_num[$i]}")
 	fi
 done
 
