@@ -71,6 +71,7 @@ if [[ $ws_curr -ne 0 ]]; then
 					if [[ ! ${ws_num[*]} =~ $(printf "%02d" $i) && $found == false ]]; then
 						ws_next=$i
 						found=true
+						break
 					fi
 				done
 			fi
@@ -89,6 +90,7 @@ if [[ $ws_curr -ne 0 ]]; then
 			if [[ ! ${ws_num[*]} =~ $(printf "%02d" $i) && $found == false ]]; then
 				ws_next=$i
 				found=true
+				break
 			fi
 		done
 	fi
