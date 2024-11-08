@@ -1,5 +1,5 @@
 # i3wm_autows
-Simple bash script for opening new workspaces automatically (that is, without having to manually pressing $mod and [1...0]. New workspaces are opened on the same output as the focused workspace unless no workspace is available (not focused, active or opened).
+Simple bash script for opening new workspaces automatically (that is, without having to manually pressing $mod and [1...0]). New workspaces are opened on the same output as the focused workspace unless no workspace is available (not focused, active or opened).
 
 ## Installation
 Download the file new_ws wherever you want it to be on your system and add a bindsym in your i3WM config file
