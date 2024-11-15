@@ -1,0 +1,63 @@
+#!/bin/bash
+
+out1='"eDP-1"'
+out2='"HDMI-A-1-1"'
+
+ws_name=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "name" | awk -F: '{print $2}'))
+ws_focus=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "focused" | awk -F: '{print $2}'))
+ws_out=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "output" | awk -F: '{print $2}'))
+nb_ws=${#ws_name[@]}
+
+ws_out1=()
+ws_out2=()
+
+ws_curr_out=''
+ws_curr_name=''
+
+for ws in $(seq 0 ${nb_ws})
+do
+	if [[ ${ws_out[$ws]} == $out1 ]]; then
+		ws_out1+=(${ws_name[$ws]})
+	elif [[ ${ws_out[$ws]} == $out2 ]]; then
+		ws_out2+=(${ws_name[$ws]})
+	else
+		continue
+	fi
+	if [[ ${ws_focus[$ws]} == 'true' ]]; then
+		ws_curr_out=${ws_out[$ws]}
+		ws_curr_name=${ws_name[$ws]}
+	fi
+done
+
+ws_list=()
+
+if [[ $ws_curr_out == $out1 ]]; then
+	ws_list=("${ws_out1[@]}")
+else
+	ws_list=("${ws_out2[@]}")
+fi
+
+index_next=0
+max_list=$((${#ws_list[@]}-1))
+
+for ws in "${!ws_list[@]}"
+do
+	if [[ $ws_curr_name == ${ws_list[$ws]} ]]; then
+		if [[ $1 == '--reverse' ]]; then
+			if [[ $ws -eq 0 ]]; then
+				index_next=$max_list
+			else
+				index_next=$(($ws-1))
+			fi
+		else
+			if [[ $ws -eq $max_list ]]; then
+				index_next=0
+			else
+				index_next=$(($ws+1))
+			fi
+		fi
+	fi
+done
+
+#echo $index_next
+i3-msg workspace ${ws_list[$index_next]}
