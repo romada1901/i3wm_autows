@@ -31,7 +31,7 @@ exec --no-startup-id dex --autostart --environment i3
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 #exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id xss-lock /home/romain/.config/scripts/i3lock/lockscreen
+exec --no-startup-id xss-lock $HOME/.config/scripts/i3lock/lockscreen
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -248,7 +248,7 @@ bar {
 }
 
 # Picom compositor
-#exec --no-startup-id picom --config /home/romain/.config/picom.conf --backend xr_glx_hybrid --vsync-use-glfinish
+#exec --no-startup-id picom --config $HOME/.config/picom.conf --backend xr_glx_hybrid --vsync-use-glfinish
 
 # Workspace assignments
 workspace $ws1 output HDMI-A-1-1 eDP-1
@@ -276,20 +276,20 @@ for_window [class="VirtualBox Manager"] layout tabbed
 for_window [class="teams-for-linux"] layout tabbed
 
 # Keyboard shortcuts
-bindsym $mod+x exec --no-startup-id /home/romain/.config/scripts/i3lock/lockscreen
+bindsym $mod+x exec --no-startup-id $HOME/.config/scripts/i3lock/lockscreen
 bindsym $mod+F1 exec --no-startup-id firefox
 bindsym $mod+Shift+x move workspace to output next
 bindsym Print exec --no-startup-id maim "/home/roma/Images/screenshots/$(date +%Y-%m-%d_%H%M%S).png"
-bindsym Shift+Print exec --no-startup-id maim --select "/home/romain/Images/screenshots/$(date +%Y-%m-%d_%H%M%S).png"
+bindsym Shift+Print exec --no-startup-id maim --select "$HOME/Images/screenshots/$(date +%Y-%m-%d_%H%M%S).png"
 #bindsym XF86BrightnessUp exec --no-startup-id brightnessctl set +5%
 #bindsym XF86BrightnessDown exec --no-startup-id brightnessctl set 5%-
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +1% && $refresh_i3status
 bindsym Shift+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -1% && $refresh_i3status
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym Scroll_Lock exec --no-startup-id playerctl play-pause
-bindsym $mod+Tab exec --no-startup-id /home/romain/.config/scripts/new_ws
-bindsym Mod1+Tab exec --no-startup-id /home/romain/.config/scripts/switch_ws
-bindsym Mod1+Shift+Tab exec --no-startup-id /home/romain/.config/scripts/switch_ws --reverse
+bindsym $mod+Tab exec --no-startup-id $HOME/.config/scripts/new_ws
+bindsym Mod1+Tab exec --no-startup-id $HOME/.config/scripts/switch_ws
+bindsym Mod1+Shift+Tab exec --no-startup-id $HOME/.config/scripts/switch_ws --reverse
 bindsym $mod+space focus output next
 
 # Containers customisation
@@ -298,7 +298,7 @@ default_floating_border pixel 3
 for_window [all] title_window_icon on
 
 # Desktop background
-exec_always feh --bg-scale /home/romain/Images/backgrounds/wallpaper
+exec_always feh --bg-scale $HOME/Images/backgrounds/wallpaper
 
 # RandR
 exec_always --no-startup-id xrandr --output HDMI-A-1-1 --auto --output eDP-1 --pos 1920x550
