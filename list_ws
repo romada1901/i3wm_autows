@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Workspace list by names and outputs file path
-WS_PATH='/home/romain/.config'
+WS_PATH='/home/$(whoami)/.config'
 
 conf_name=$(i3-msg -t get_config | grep 'set' | grep '$ws' | awk -F' ' '{print $2":"$3}')
 conf_name_ws=($(awk -F':' '{print $1}' <<< $conf_name))
