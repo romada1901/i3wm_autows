@@ -73,5 +73,5 @@ do
 	fi
 done
 
-echo $ws_new
-#i3-msg workspace $ws_new
+#echo $ws_new
+i3-msg workspace $ws_new
