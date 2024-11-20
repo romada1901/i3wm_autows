@@ -2,7 +2,7 @@
 
 out1='eDP-1'
 out2='HDMI-A-1-1'
-FILE_PATH='/home/romain/.config'
+FILE_PATH='/home/$(whoami)/.config'
 
 ws_new=''
 
