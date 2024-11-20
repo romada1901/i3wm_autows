@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#Workspace list by names and outputs file path
+WS_PATH='/home/romain/.config'
+
+conf_name=$(i3-msg -t get_config | grep 'set' | grep '$ws' | awk -F' ' '{print $2":"$3}')
+conf_name_ws=($(awk -F':' '{print $1}' <<< $conf_name))
+conf_name_na=($(awk -F':' '{print $2}' <<< $conf_name))
+conf_disp=$(i3-msg -t get_config | grep 'workspace' | grep '$ws' | grep 'output' | awk -F' ' '{print $2":"$4}')
+conf_disp_ws=($(awk -F':' '{print $1}' <<< $conf_disp))
+conf_disp_di=($(awk -F':' '{print $2}' <<< $conf_disp))
+
+ws_list=()
+for i in "${!conf_name_ws[@]}"
+do
+	for j in "${!conf_disp_ws[@]}"
+	do
+		if [[ ${conf_name_ws[$i]} == ${conf_disp_ws[$j]} ]]; then
+			ws_list+=("${conf_name_ws[$i]}:$(tr -d '"' <<< ${conf_name_na[$i]}):${conf_disp_di[$j]}")
+			break
+		fi
+	done
+done
+
+printf "%s\n" "${ws_list[@]}" > "$WS_PATH/ws_list.txt"
+chmod og-rwx "$WS_PATH/ws_list.txt"

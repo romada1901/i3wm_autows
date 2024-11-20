@@ -1,0 +1,77 @@
+#!/bin/bash
+
+out1='eDP-1'
+out2='HDMI-A-1-1'
+FILE_PATH='/home/romain/.config'
+
+ws_new=''
+
+ws_nam=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "name" | awk -F: '{print $2}' | tr -d '"'))
+ws_foc=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "focused" | awk -F: '{print $2}'))
+ws_out=($(i3-msg -t get_workspaces | tr ',' '\n' | grep "output" | awk -F: '{print $2}' | tr -d '"'))
+
+if [[ $(printf "%s\n" "${ws_out[@]}" | sort -u | wc -l) -eq 1 ]]; then
+	even_odd=false
+else
+	even_odd=true
+fi
+
+#conf_=$(i3-msg -t get_config | grep '#affect')
+conf_=$(<"$FILE_PATH/ws_list.txt")
+conf_nam=($(awk -F':' '{print $2}' <<< $conf_))
+conf_out1=($(awk -F ':' '{print $2}' <<< $(grep $out1  <<< $conf_)))
+conf_out2=($(awk -F ':' '{print $2}' <<< $(grep $out2  <<< $conf_)))
+
+ws_out1=()
+ws_out2=()
+
+ws_curr_out=''
+ws_curr_nam=''
+
+for ws in "${!ws_nam[@]}"
+do
+        if [[ ${ws_out[$ws]} == $out1 ]]; then
+                ws_out1+=(${ws_nam[$ws]})
+        elif [[ ${ws_out[$ws]} == $out2 ]]; then
+                ws_out2+=(${ws_nam[$ws]})
+        else
+                continue
+        fi
+        if [[ ${ws_foc[$ws]} == 'true' ]]; then
+                ws_curr_out=${ws_out[$ws]}
+                ws_curr_nam=${ws_nam[$ws]}
+        fi
+done
+
+ws_list=()
+conf_list=()
+
+if [[ $even_odd == true ]]; then
+	if [[ $ws_curr_out == $out1 ]]; then
+		ws_list=("${ws_out1[@]}")
+		ws_list+=(${ws_out2[@]})
+		conf_list=("${conf_out1[@]}")
+		conf_list+=(${conf_out2[@]})
+	else
+		ws_list=("${ws_out2[@]}")
+		ws_list+=(${ws_out1[@]})
+		conf_list=("${conf_out2[@]}")
+		conf_list+=(${conf_out1[@]})
+	fi
+else
+	conf_list=("${conf_[@]}")
+fi
+
+found=false
+for ws in "${conf_list[@]}"
+do
+	if [[ $found == false ]]; then
+		if [[ ! ${ws_list[@]} =~ $ws ]]; then
+			found=true
+			ws_new=$ws
+		fi
+	fi
+done
+
+echo $ws_new
+#i3-msg workspace $ws_new
